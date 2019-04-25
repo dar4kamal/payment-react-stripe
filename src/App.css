@@ -31,3 +31,14 @@
     transform: rotate(360deg);
   }
 }
+
+.card {
+  background-color: #080c34;  
+  width: 25vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;  
+  text-align: center;
+  color: white;
+}
