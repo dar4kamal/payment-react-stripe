@@ -1,37 +1,32 @@
 import React, {Component} from 'react';
-import {CardElement, injectStripe} from 'react-stripe-elements';
+import StripeCheckout from 'react-stripe-checkout';
+import axios from "axios";
 
 class CheckoutForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {complete: false};
-    this.submit = this.submit.bind(this);
   }
 
-  async submit(ev) {
-    // User clicked submit
-    let {token} = await this.props.stripe.createToken({name: "Name"});
-    console.log(token);
-    let response = await fetch("http://localhost:5000/charge", {
-        method: "POST",
-        headers: {"Content-Type": "text/plain"},
-        body: token.id
-    });
+  onToken = async (token, addresses) => {
+    const res = await axios.post("http://localhost:5000/api/cart/charge/5cc7236dc711c3109c7283a5", { token });
+    if(res) alert(res.data.message)
+    else alert("missing credentials")
 
-    if (response.ok) this.setState({complete: true});
-  }
-
+  };
+  
   render() {
-    if (this.state.complete) return <h1> "Purchase Complete!" </h1>
     return (
-        <div className="checkout">
-            <div className="ma3">
-                <CardElement />
-            </div>
-            <button onClick={this.submit}>Send</button>
-        </div>
+      <StripeCheckout
+        stripeKey="pk_test_waUzNCqXf3UdHEixK8nwy8u600AnlZIHuP"
+        billingAddress
+        image="https://static01.nyt.com/images/2017/05/11/t-magazine/bookstore-slide-2MCD/bookstore-slide-2MCD-articleLarge.jpg?quality=75&auto=webp&disable=upscale"
+        locale="auto"
+        name="BookStore.com"
+        token={this.onToken}
+        zipCode
+      />
     );
   }
+  
 }
-
-export default injectStripe(CheckoutForm);
+export default CheckoutForm;
