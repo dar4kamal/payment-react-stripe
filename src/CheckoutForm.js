@@ -3,12 +3,10 @@ import StripeCheckout from 'react-stripe-checkout';
 import axios from "axios";
 
 class CheckoutForm extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   onToken = async (token, addresses) => {
-    const res = await axios.post("http://localhost:5000/api/cart/charge/5cc7236dc711c3109c7283a5", { token });
+    const userId = "5cce25a3ba4b5404509b464d";
+    const res = await axios.post(`http://localhost:5000/api/cart/charge/${userId}`, { token });
     if(res) alert(res.data.message)
     else alert("missing credentials")
 
